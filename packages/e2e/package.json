@@ -1,0 +1,28 @@
+{
+  "name": "e2e",
+  "private": true,
+  "version": "0.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "author": "Tobias Høegh <tobias@tujo.no>",
+  "scripts": {
+    "test": "yarn playwright test",
+    "test:watch": "playwright test --ui",
+    "test:ci": "yarn test:develop && yarn test:production",
+    "build-plugin": "yarn workspace gatsby-plugin-eufemia-theme-handler build",
+    "clean": "yarn workspace ui-theme-example clean",
+    "ui-theme-example:develop": "yarn clean && yarn workspace ui-theme-example start",
+    "ui-theme-example:production": "yarn clean && yarn workspace ui-theme-example build && yarn workspace ui-theme-example serve",
+    "test:develop": "yarn build-plugin && start-server-and-test ui-theme-example:develop http://localhost:8001 test:run",
+    "test:run": "yarn playwright test",
+    "test:production": "yarn build-plugin && start-server-and-test ui-theme-example:production http://localhost:8001 test:run"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.37.1",
+    "cross-env": "7.0.3",
+    "start-server-and-test": "2.0.0"
+  },
+  "volta": {
+    "extends": "../../package.json"
+  }
+}

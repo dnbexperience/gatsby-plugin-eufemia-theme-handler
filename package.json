@@ -1,0 +1,29 @@
+{
+  "name": "gatsby-eufemia-theme-handler",
+  "private": true,
+  "workspaces": [
+    "examples/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "watch": "yarn workspace gatsby-plugin-eufemia-theme-handler watch",
+    "watch:all": "yarn watch & yarn workspace sb-theme-example watch & yarn workspace ui-theme-example watch & yarn serve",
+    "start": "yarn watch & yarn workspace sb-theme-example start & yarn workspace ui-theme-example start",
+    "build": "yarn workspace gatsby-plugin-eufemia-theme-handler build && yarn workspace ui-theme-example build && yarn workspace ui-theme-example serve & yarn workspace sb-theme-example build && kill-port 8002",
+    "serve": "yarn workspace sb-theme-example serve & yarn workspace ui-theme-example serve",
+    "clean": "yarn workspace sb-theme-example clean & yarn workspace ui-theme-example clean",
+    "release": "yarn workspace gatsby-plugin-eufemia-theme-handler release"
+  },
+  "devDependencies": {
+    "kill-port": "2.0.1"
+  },
+  "engines": {
+    "node": "18.13.0",
+    "yarn": ">=1.22.10"
+  },
+  "volta": {
+    "node": "18.13.0",
+    "yarn": "1.22.10"
+  },
+  "packageManager": "yarn@3.4.1"
+}

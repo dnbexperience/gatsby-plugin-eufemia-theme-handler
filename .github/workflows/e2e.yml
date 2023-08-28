@@ -1,0 +1,73 @@
+name: e2e # NB: The name is used in workflow_run
+
+on:
+  push:
+    branches: [main, beta, chore/*, fix/*, feat/*]
+  pull_request:
+    types: [opened]
+    branches: [main, beta]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: e2e tests
+
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: 'package.json'
+
+      - name: Use yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ./.yarn/cache
+          key: ${{ secrets.CACHE_VERSION }}-${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ secrets.CACHE_VERSION }}-${{ runner.os }}-deps-
+
+      - name: Gatsby cache
+        uses: actions/cache@v3
+        id: e2e-gatsby-cache
+        with:
+          path: |
+            ./examples/ui-theme-example/.cache
+            ./examples/ui-theme-example/public
+          key: gatsby-${{ runner.os }}
+
+      - name: Use Playwright cache
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: ~/Library/Caches/ms-playwright
+          key: ${{ secrets.CACHE_VERSION }}-${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
+      - run: npx playwright-firefox install --with-deps firefox
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: npx playwright-firefox install-deps firefox
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Run e2e tests
+        run: yarn workspace e2e test:ci
+
+      - name: Store e2e artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e-artifact
+          path: ./packages/e2e
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

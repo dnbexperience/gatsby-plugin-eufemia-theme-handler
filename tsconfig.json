@@ -1,0 +1,18 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "lib": ["es2018", "dom"],
+    "types": ["node"],
+    "outDir": "./build",
+    "rootDir": ".",
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules", "build", "**/e2e"]
+}

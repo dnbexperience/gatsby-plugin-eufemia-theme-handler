@@ -1,0 +1,25 @@
+{
+  "name": "ui-theme-example",
+  "private": true,
+  "license": "MIT",
+  "author": "Tobias Høegh <tobias@tujo.no>",
+  "scripts": {
+    "start": "gatsby develop --port 8001",
+    "build": "gatsby build",
+    "serve": "gatsby serve --port 8001",
+    "clean": "gatsby clean"
+  },
+  "browserslist": [
+    "supports es6-module"
+  ],
+  "dependencies": {
+    "@dnb/eufemia": "10.7.0",
+    "gatsby": "5.12.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "gatsby-plugin-sass": "6.12.0",
+    "sass": "1.66.1"
+  }
+}

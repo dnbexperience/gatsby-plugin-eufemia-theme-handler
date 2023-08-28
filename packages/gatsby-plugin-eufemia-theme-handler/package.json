@@ -1,0 +1,72 @@
+{
+  "name": "gatsby-plugin-eufemia-theme-handler",
+  "description": "Gatsby Plugin to handle visual themes for @dnb/eufemia",
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "visual theme",
+    "eufemia",
+    "design system",
+    "dnb"
+  ],
+  "license": "SEE LICENSE IN LICENSE FILE",
+  "author": "Tobias Høegh <tobias@tujo.no>",
+  "version": "0.0.0-development",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dnbexperience/gatsby-plugin-eufemia-theme-handler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dnbexperience/gatsby-plugin-eufemia-theme-handler/issues"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "module": "./index.js",
+      "default": "./index.js"
+    },
+    "./collectThemes.js": "./collectThemes.js",
+    "./themeHandler.js": "./themeHandler.js",
+    "./inlineScriptDev.mjs": "./inlineScriptDev.mjs",
+    "./inlineScriptProd.mjs": "./inlineScriptProd.mjs",
+    "./gatsby-node.js": "./gatsby-node.js",
+    "./gatsby-browser.js": "./gatsby-browser.js",
+    "./gatsby-ssr.js": "./gatsby-ssr.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "release": "yarn copy-readme && yarn build && semantic-release",
+    "release:dry": "semantic-release --dry-run",
+    "copy-readme": "cp ../../README.md ./README.md",
+    "build": "echo not implemented",
+    "watch": "echo not implemented",
+    "test:types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "gatsby-core-utils": "4.12.0",
+    "globby": "11.0.4",
+    "micromatch": "4.0.5",
+    "raw-loader": "4.0.2",
+    "semantic-release": "21.1.1",
+    "terser-loader": "2.0.3",
+    "typescript": "5.2.2"
+  },
+  "peerDependencies": {
+    "@dnb/eufemia": ">=10",
+    "gatsby": ">=4",
+    "react": ">=17"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "branches": [
+      "main",
+      "next"
+    ]
+  },
+  "volta": {
+    "extends": "../../package.json"
+  }
+}
