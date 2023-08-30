@@ -16,7 +16,7 @@ const { slash } = require('gatsby-core-utils')
 function createThemesImport({ reporter, programDirectory, pluginOptions }) {
   const limitThemes = Object.keys(pluginOptions.themes || [])
   const packageRoot = path.dirname(
-    require.resolve('@dnb/eufemia', [programDirectory])
+    require.resolve('@dnb/eufemia', { paths: [programDirectory] })
   )
   const globbyPaths = [slash(path.join(packageRoot, pluginOptions.filesGlob))]
   const themesFiles = globby.sync(globbyPaths).map((file) => {

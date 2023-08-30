@@ -43,13 +43,15 @@
     "watch": "echo not implemented",
     "test:types": "tsc --noEmit"
   },
+  "dependencies": {
+    "terser-loader": "2.0.3"
+  },
   "devDependencies": {
     "gatsby-core-utils": "4.12.0",
     "globby": "11.0.4",
     "micromatch": "4.0.5",
     "raw-loader": "4.0.2",
     "semantic-release": "21.1.1",
-    "terser-loader": "2.0.3",
     "typescript": "5.2.2"
   },
   "peerDependencies": {
