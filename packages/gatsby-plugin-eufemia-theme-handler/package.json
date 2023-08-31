@@ -46,6 +46,7 @@
     "test:types": "tsc --noEmit"
   },
   "dependencies": {
+    "local-eufemia": "npm:@dnb/eufemia@10.7.0",
     "terser-loader": "2.0.3"
   },
   "devDependencies": {

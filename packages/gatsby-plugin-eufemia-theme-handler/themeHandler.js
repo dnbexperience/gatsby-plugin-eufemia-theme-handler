@@ -1,7 +1,7 @@
 import React from 'react'
 import inlineScriptProd from '!raw-loader!terser-loader!./inlineScriptProd'
 import inlineScriptDev from '!raw-loader!terser-loader!./inlineScriptDev'
-import EventEmitter from '@dnb/eufemia/shared/helpers/EventEmitter'
+import EventEmitter from 'local-eufemia/shared/helpers/EventEmitter'
 
 const defaultTheme = globalThis.EUFEMIA_THEME_defaultTheme || 'ui'
 const availableThemes = globalThis.EUFEMIA_THEME_themes || []
