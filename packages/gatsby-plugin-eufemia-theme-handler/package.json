@@ -21,6 +21,7 @@
   },
   "main": "index.js",
   "module": "index.js",
+  "types": "themeHandler.d.ts",
   "exports": {
     ".": {
       "module": "./index.js",
@@ -28,6 +29,7 @@
     },
     "./collectThemes.js": "./collectThemes.js",
     "./themeHandler.js": "./themeHandler.js",
+    "./themeHandler.d.ts": "./themeHandler.d.ts",
     "./inlineScriptDev.mjs": "./inlineScriptDev.mjs",
     "./inlineScriptProd.mjs": "./inlineScriptProd.mjs",
     "./gatsby-node.js": "./gatsby-node.js",
