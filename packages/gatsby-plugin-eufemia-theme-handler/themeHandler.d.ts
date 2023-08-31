@@ -1,11 +1,10 @@
+import type { ThemeNames, ThemeProps } from '@dnb/eufemia/shared/Theme'
 type PropMapping = string
 export type ThemesItem = {
-  name: string
   file: string
   hide?: boolean
   isDev?: boolean
-  propMapping: PropMapping
-}
+} & ThemeProps
 export type Themes = Array<ThemesItem>
 export const getThemes = (): Themes => null
 export const isValidTheme = (): boolean => null
