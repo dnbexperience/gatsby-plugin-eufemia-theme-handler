@@ -14,6 +14,7 @@ exports.pluginOptionsSchema = ({ Joi }) => {
   return Joi.object({
     themes: Joi.object().required(),
     defaultTheme: Joi.string().required(),
+    storageId: Joi.string().optional().default('eufemia-theme'),
     filesGlob: Joi.string()
       .optional()
       .default('**/style/themes/**/*-theme-{basis,components}.min.css'),
@@ -38,9 +39,7 @@ exports.onPreBootstrap = ({ reporter, store }, pluginOptions) => {
 exports.onPostBuild = ({ reporter }) => {
   if (global.themeNames.length > 0) {
     reporter.success(
-      `Eufemia themes successfully extracted: ${global.themeNames.join(
-        ', '
-      )}`
+      `Eufemia themes successfully extracted: ${global.themeNames.join(', ')}`
     )
   } else {
     reporter.warn('No Eufemia themes found!')
@@ -58,8 +57,9 @@ exports.onCreateWebpackConfig = (
       'globalThis.EUFEMIA_THEME_defaultTheme': JSON.stringify(
         pluginOptions.defaultTheme
       ),
-      'globalThis.EUFEMIA_THEME_themes': JSON.stringify(
-        pluginOptions.themes
+      'globalThis.EUFEMIA_THEME_themes': JSON.stringify(pluginOptions.themes),
+      'globalThis.EUFEMIA_THEME_storageId': JSON.stringify(
+        pluginOptions.storageId
       ),
     })
   )

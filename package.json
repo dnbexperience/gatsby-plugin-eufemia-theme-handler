@@ -15,6 +15,7 @@
     "release": "yarn workspace gatsby-plugin-eufemia-theme-handler release"
   },
   "devDependencies": {
+    "@dnb/eufemia": "10.7.0",
     "kill-port": "2.0.1"
   },
   "engines": {
