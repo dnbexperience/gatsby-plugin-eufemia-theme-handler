@@ -74,7 +74,7 @@ test.describe('change theme', () => {
     await page.click('#change-theme-portal ul li:nth-child(2)')
 
     const localStorageData = await page.evaluate(() => {
-      return JSON.parse(window.localStorage.getItem('eufemia-theme') || '{}')
+      return JSON.parse(window.localStorage.getItem('eufemia-ui') || '{}')
     })
 
     expect(localStorageData.name).toBe('sbanken')

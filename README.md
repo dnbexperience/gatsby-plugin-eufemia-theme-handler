@@ -29,6 +29,7 @@ import '@dnb/eufemia/style/core'
       resolve: 'gatsby-plugin-eufemia-theme-handler',
       options: {
         defaultTheme: 'ui',
+        storageId: 'your-id', // defaults to "eufemia-theme"
         themes: {
           ui: { name: 'DNB Eufemia' },
           eiendom: { name: 'DNB Eiendom', hide: true },

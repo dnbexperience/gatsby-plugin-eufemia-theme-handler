@@ -57,16 +57,13 @@ if (typeof window !== 'undefined') {
               }
 
               const defaultStyleElement = document.querySelector(
-                '[data-href^="' +
-                  themes[globalThis.defaultTheme].file +
-                  '"]'
+                '[data-href^="' + themes[globalThis.defaultTheme].file + '"]'
               )
               if (defaultStyleElement) {
                 headElement.removeChild(defaultStyleElement)
               }
 
-              const previousElem =
-                document.getElementById('previous-theme')
+              const previousElem = document.getElementById('previous-theme')
               if (previousElem) {
                 headElement.removeChild(previousElem)
               }
@@ -89,16 +86,15 @@ if (typeof window !== 'undefined') {
 
   globalThis.__getEufemiaThemeName = () => {
     try {
+      const storageId = globalThis.storageId || 'eufemia-theme'
       const urlParams = new URLSearchParams(window.location.search)
-      const themeName = urlParams.get('eufemia-theme')
+      const themeName = urlParams.get(storageId)
+
       if (themeName) {
         return themeName
       }
-    } catch (e) {
-      console.error(e)
-    }
-    try {
-      const data = window.localStorage.getItem('eufemia-theme')
+
+      const data = window.localStorage.getItem(storageId)
       const theme = JSON.parse(data?.startsWith('{') ? data : '{}')
 
       return theme?.name || globalThis.defaultTheme

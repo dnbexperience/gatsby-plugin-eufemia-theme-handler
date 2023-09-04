@@ -1,10 +1,11 @@
 import React from 'react'
 import inlineScriptProd from '!raw-loader!terser-loader!./inlineScriptProd'
 import inlineScriptDev from '!raw-loader!terser-loader!./inlineScriptDev'
-import EventEmitter from 'local-eufemia/shared/helpers/EventEmitter'
+import EventEmitter from './EventEmitter.js'
 
 const defaultTheme = globalThis.EUFEMIA_THEME_defaultTheme || 'ui'
 const availableThemes = globalThis.EUFEMIA_THEME_themes || []
+const storageId = globalThis.EUFEMIA_THEME_storageId || 'eufemia-theme'
 const availableThemesArray = Object.keys(availableThemes)
 
 export function getThemes() {
@@ -33,7 +34,7 @@ export function getTheme() {
     return defaultTheme
   }
   try {
-    const data = window.localStorage.getItem('eufemia-theme')
+    const data = window.localStorage.getItem(storageId)
     const theme = JSON.parse(data?.startsWith('{') ? data : '{}')
 
     const regex = /.*eufemia-theme=([^&]*).*/
@@ -68,10 +69,9 @@ export function setTheme(themeProps, callback) {
       emitter.update(theme)
 
       callback?.(theme)
-      // return <Theme name={themeName}>{children}</Theme>
     })
 
-    window.localStorage.setItem('eufemia-theme', JSON.stringify(theme))
+    window.localStorage.setItem(storageId, JSON.stringify(theme))
   } catch (e) {
     console.error(e)
   }
@@ -157,6 +157,7 @@ export const onPreRenderHTML = (
     return code
       .replace(/globalThis.isDev/g, JSON.stringify(isDev))
       .replace(/globalThis.defaultTheme/g, JSON.stringify(defaultTheme))
+      .replace(/globalThis.storageId/g, JSON.stringify(storageId))
       .replace(/globalThis.availableThemes/g, JSON.stringify(availableThemes))
       .replace(
         /globalThis.inlineDefaultTheme/g,
