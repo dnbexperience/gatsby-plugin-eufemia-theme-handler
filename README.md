@@ -5,7 +5,7 @@ This plugin is a easy to use drop-in solution to load different DNB Eufemia Them
 ## Features
 
 - The current theme used is stored in the Browsers localStorage under the key `eufemia-theme`
-- You can define a theme in the URL: `https://eufemia.dnb.no/?eufemia-theme=eiendom`
+- You can define a theme in the URL: `https://eufemia.dnb.no/?eufemia-theme=sbanken`
 - Automatically splits theme styles into separate Webpack chunks, not matter if you have imported them already in your app or not
 - Supports both build an dev mode with fast refresh and hot module replacement
 - Loads only one theme package at a time. When the user switches to another theme, a new CSS theme file will be downloaded.
@@ -28,12 +28,17 @@ import '@dnb/eufemia/style/core'
     {
       resolve: 'gatsby-plugin-eufemia-theme-handler',
       options: {
+        // (required) define your default theme
         defaultTheme: 'ui',
-        storageId: 'your-id', // defaults to "eufemia-theme"
+
+        // (required) define your themes
         themes: {
           ui: { name: 'DNB Eufemia' },
-          eiendom: { name: 'DNB Eiendom', hide: true },
+          sbanken: { name: 'DNB Sbanken', hide: true },
         },
+
+        // (optional) defaults to "eufemia-theme" (localStorage)
+        storageId: 'your-custom-id',
 
         // (optional) Definfes with a glob where the styles are placed inside of @dnb/eufemia/...
         filesGlob: '**/style/themes/**/*-theme-{basis,components}.min.css',
