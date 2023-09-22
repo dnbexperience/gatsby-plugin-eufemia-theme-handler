@@ -32,7 +32,7 @@ export function useThemeHandler() {
 
 export function getTheme() {
   if (typeof window === 'undefined') {
-    return defaultTheme
+    return { name: defaultTheme };
   }
   try {
     const data = window.localStorage.getItem(storageId)
@@ -47,13 +47,13 @@ export function getTheme() {
 
     if (!isValidTheme(themeName)) {
       console.error('Not valid themeName:', themeName)
-      return defaultTheme // stop here
+      return { name: defaultTheme }; // stop here
     }
 
     return { ...theme, name: themeName }
   } catch (e) {
     console.error(e)
-    return defaultTheme
+    return { name: defaultTheme }
   }
 }
 
