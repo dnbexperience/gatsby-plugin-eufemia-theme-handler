@@ -47,7 +47,7 @@ export function getTheme() {
 
     if (!isValidTheme(themeName)) {
       console.error('Not valid themeName:', themeName)
-      return { name: defaultTheme }; // stop here
+      return { name: defaultTheme } // stop here
     }
 
     return { ...theme, name: themeName }
