@@ -32,7 +32,7 @@ export function useThemeHandler() {
 
 export function getTheme() {
   if (typeof window === 'undefined') {
-    return { name: defaultTheme };
+    return { name: defaultTheme }
   }
   try {
     const data = window.localStorage.getItem(storageId)
