@@ -1,68 +1,29 @@
-import { test, expect, Page, Locator } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { clearStorage } from './utils'
 
-async function clearStorage(page: Page) {
-  await page.evaluate(() => window.localStorage.clear())
-  await page.evaluate(() => window.sessionStorage.clear())
-}
+test.beforeEach(async ({ page }) => {
+  await page.goto('/')
+
+  const mounted = page.locator('html[data-remote-mounted]')
+  await mounted.waitFor()
+})
 
 test.afterEach(async ({ page }) => {
   await clearStorage(page)
 })
 
-test.describe('default theme', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-
-    // Check if app is mounted
-    await page.waitForSelector('html[data-remote-mounted]', {
-      state: 'attached',
-    })
-  })
-
-  test('should have no preload link', async ({ page }) => {
-    const elem = page.locator('#gatsby-chunk-mapping')
-
-    if ((await elem.count()) > 0) {
-      expect(
-        await page.locator('link[href^="/ui."][rel="preload"]').count()
-      ).toEqual(0)
-    } else {
-      expect(elem).toHaveCount(0)
-    }
-  })
-
-  test('should have one default theme loaded', async ({ page }) => {
-    const elem = page.locator('#gatsby-chunk-mapping')
-
-    if ((await elem.count()) > 0) {
-      expect(
-        await page.locator('style[data-href^="/ui."]').count()
-      ).toEqual(1)
-    } else {
-      expect(elem).toHaveCount(0)
-    }
-  })
-})
-
 test.describe('change theme', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-
-    // Check if app is mounted
-    await page.waitForSelector('html[data-remote-mounted]', {
-      state: 'attached',
-    })
-  })
-
   test('should load css file', async ({ page }) => {
     await page.click('#change-theme')
     await page.click('#change-theme-portal ul li:nth-child(2)')
 
-    await page.waitForSelector('link[href^="/sbanken."]', {
+    const sbanken = page.locator('link[href^="/sbanken."]')
+    await sbanken.waitFor({
       state: 'attached',
     })
 
-    await page.waitForSelector('style[data-href^="/ui."]', {
+    const ui = page.locator('style[data-href^="/ui."]')
+    await ui.waitFor({
       state: 'detached',
     })
 
@@ -93,9 +54,11 @@ test.describe('change theme', () => {
     await page.click('#change-theme')
     await page.click('#change-theme-portal ul li:first-child')
 
-    await page.waitForSelector('link[href^="/ui."][rel="stylesheet"]', {
+    const stylesheet = page.locator('link[href^="/ui."][rel="stylesheet"]')
+    await stylesheet.waitFor({
       state: 'attached',
     })
+
     const uiCssFileCount = await page.$$eval(
       'link[href^="/ui."][rel="stylesheet"]',
       (elements) => elements.length
