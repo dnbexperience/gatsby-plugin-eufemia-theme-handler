@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "scripts": {
+    "test": "yarn workspace e2e test",
     "watch": "yarn workspace gatsby-plugin-eufemia-theme-handler watch",
     "watch:all": "yarn watch & yarn workspace sb-theme-example watch & yarn workspace ui-theme-example watch & yarn serve",
     "start": "yarn watch & yarn workspace sb-theme-example start & yarn workspace ui-theme-example start",

@@ -13,31 +13,42 @@ const { slash } = require('gatsby-core-utils')
  * @property {object} reporter Gatsby Reporter
  * @property {object} pluginOptions Gatsby pluginOptions
  */
-function createThemesImport({ reporter, programDirectory, pluginOptions }) {
+function createThemesImport({
+  reporter,
+  programDirectory,
+  pluginOptions,
+}) {
+  const filesOrder = pluginOptions.filesOrder
+
   const limitThemes = Object.keys(pluginOptions.themes || [])
   const packageRoot = path.dirname(
     require.resolve('@dnb/eufemia', { paths: [programDirectory] })
   )
-  const globbyPaths = [slash(path.join(packageRoot, pluginOptions.filesGlob))]
-  const themesFiles = globby.sync(globbyPaths).map((file) => {
-    return slash(file)
+  const globbyPaths = pluginOptions.filesGlobs.map((glob) => {
+    return slash(path.join(packageRoot, glob))
   })
 
-  const filesOrder = pluginOptions.filesOrder
-  const sortedThemesFiles = themesFiles
+  if (pluginOptions.coreStyleName) {
+    globbyPaths.push(`**/style/${pluginOptions.coreStyleName}.min.css`)
+  }
+
+  const themesFiles = globby
+    .sync(globbyPaths)
+    .map((file) => {
+      return slash(file)
+    })
     .filter((file) => {
       if (/\/(es|cjs)\/style\//.test(file)) {
         return false
       }
 
-      if (filesOrder.length > 0) {
-        return filesOrder.some((glob) => micromatch.isMatch(file, '**/' + glob))
-      }
-
       return true
     })
+
+  const sortedThemesFiles = themesFiles
     .map((file) => {
-      const themeName = (file.match(new RegExp('/theme-([^/]*)/')) || [])?.[1]
+      const themeName = (file.match(new RegExp('/theme-([^/]*)/')) ||
+        [])?.[1]
 
       return { file, themeName }
     })
@@ -50,6 +61,15 @@ function createThemesImport({ reporter, programDirectory, pluginOptions }) {
         filesOrder.findIndex((glob) => micromatch.isMatch(b.file, glob))
       )
     })
+
+  if (pluginOptions.coreStyleName) {
+    const coreFile = themesFiles.find((file) =>
+      file.includes(pluginOptions.coreStyleName)
+    )
+    if (coreFile) {
+      sortedThemesFiles.unshift({ file: coreFile })
+    }
+  }
 
   const writeThemesImports = () => {
     const imports = sortedThemesFiles.map(({ file }) => {

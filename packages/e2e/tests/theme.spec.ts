@@ -35,7 +35,9 @@ test.describe('default theme', () => {
     const elem = page.locator('#gatsby-chunk-mapping')
 
     if ((await elem.count()) > 0) {
-      expect(await page.locator('style[data-href^="/ui."]').count()).toEqual(1)
+      expect(
+        await page.locator('style[data-href^="/ui."]').count()
+      ).toEqual(1)
     } else {
       expect(elem).toHaveCount(0)
     }
@@ -64,9 +66,13 @@ test.describe('change theme', () => {
       state: 'detached',
     })
 
-    expect(await page.locator('link[href^="/sbanken."]').count()).toEqual(1)
+    expect(await page.locator('link[href^="/sbanken."]').count()).toEqual(
+      1
+    )
 
-    expect(await page.locator('style[data-href^="/ui."]').count()).toEqual(0)
+    expect(await page.locator('style[data-href^="/ui."]').count()).toEqual(
+      0
+    )
   })
 
   test('should set local storage', async ({ page }) => {

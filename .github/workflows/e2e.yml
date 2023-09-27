@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  e2e:
     name: e2e tests
 
     strategy:
@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Node.js
         uses: actions/setup-node@v3
@@ -37,6 +37,23 @@ jobs:
           key: ${{ secrets.CACHE_VERSION }}-${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ secrets.CACHE_VERSION }}-${{ runner.os }}-deps-
 
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Use Playwright cache
+        uses: actions/cache@v3
+        id: playwright-cache
+        with:
+          path: |
+            ~/Library/Caches/ms-playwright
+            ~/.cache/ms-playwright
+            %USERPROFILE%\AppData\Local\ms-playwright
+          key: ${{ secrets.CACHE_VERSION }}-${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn workspace e2e playwright install --with-deps firefox
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+      - run: yarn workspace e2e playwright install-deps firefox
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+
       - name: Gatsby cache
         uses: actions/cache@v3
         id: e2e-gatsby-cache
@@ -46,22 +63,8 @@ jobs:
             ./examples/ui-theme-example/public
           key: gatsby-${{ runner.os }}
 
-      - name: Use Playwright cache
-        uses: actions/cache@v3
-        id: playwright-cache
-        with:
-          path: ~/Library/Caches/ms-playwright
-          key: ${{ secrets.CACHE_VERSION }}-${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock') }}
-      - run: npx playwright-firefox install --with-deps firefox
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: npx playwright-firefox install-deps firefox
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-
-      - name: Install dependencies
-        run: yarn install --immutable
-
       - name: Run e2e tests
-        run: yarn workspace e2e test:ci
+        run: yarn test
 
       - name: Store e2e artifacts
         uses: actions/upload-artifact@v3

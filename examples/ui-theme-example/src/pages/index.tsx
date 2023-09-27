@@ -1,20 +1,17 @@
 import React from 'react'
 import { Button } from '@dnb/eufemia'
 import { Layout } from '@dnb/eufemia/extensions/forms'
-import { Provider } from '@dnb/eufemia/shared'
 import ChangeStyleTheme from '../../../shared/ChangeStyleTheme'
 
 const App = () => {
   return (
-    <Provider>
-      <Layout.Card space spacing="medium">
-        <Layout.MainHeading>DNB UI</Layout.MainHeading>
+    <Layout.Card space spacing="medium">
+      <Layout.MainHeading>DNB UI</Layout.MainHeading>
 
-        <Button icon="bell">Button</Button>
+      <Button icon="bell">Button</Button>
 
-        <ChangeStyleTheme />
-      </Layout.Card>
-    </Provider>
+      <ChangeStyleTheme />
+    </Layout.Card>
   )
 }
 
