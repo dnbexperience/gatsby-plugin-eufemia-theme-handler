@@ -1,5 +1,4 @@
 import React from 'react'
-import './src/StyleImporter'
 
 export const wrapRootElement = ({ element }) => {
   return (

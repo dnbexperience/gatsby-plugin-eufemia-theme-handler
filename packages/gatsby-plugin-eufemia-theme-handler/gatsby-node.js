@@ -15,9 +15,12 @@ exports.pluginOptionsSchema = ({ Joi }) => {
     themes: Joi.object().required(),
     defaultTheme: Joi.string().required(),
     storageId: Joi.string().optional().default('eufemia-theme'),
-    filesGlob: Joi.string()
+    filesGlobs: Joi.array()
       .optional()
-      .default('**/style/themes/**/*-theme-{basis,components}.min.css'),
+      .default([
+        '**/style/dnb-ui-core.min.css',
+        '**/style/themes/**/*-theme-{basis,components,extensions}.min.css',
+      ]),
     filesOrder: Joi.array().optional().default([
       // The file order does matter!
       '**/*-theme-extensions.*',
@@ -25,6 +28,8 @@ exports.pluginOptionsSchema = ({ Joi }) => {
       '**/*-theme-basis.*',
     ]),
     inlineDefaultTheme: Joi.boolean().optional().default(true),
+    wrapWithThemeProvider: Joi.boolean().optional().default(true),
+    coreStyleName: Joi.string().optional().default('dnb-ui-core'),
   })
 }
 
@@ -39,7 +44,9 @@ exports.onPreBootstrap = ({ reporter, store }, pluginOptions) => {
 exports.onPostBuild = ({ reporter }) => {
   if (global.themeNames.length > 0) {
     reporter.success(
-      `Eufemia themes successfully extracted: ${global.themeNames.join(', ')}`
+      `Eufemia themes successfully extracted: ${global.themeNames.join(
+        ', '
+      )}`
     )
   } else {
     reporter.warn('No Eufemia themes found!')
@@ -57,7 +64,9 @@ exports.onCreateWebpackConfig = (
       'globalThis.EUFEMIA_THEME_defaultTheme': JSON.stringify(
         pluginOptions.defaultTheme
       ),
-      'globalThis.EUFEMIA_THEME_themes': JSON.stringify(pluginOptions.themes),
+      'globalThis.EUFEMIA_THEME_themes': JSON.stringify(
+        pluginOptions.themes
+      ),
       'globalThis.EUFEMIA_THEME_storageId': JSON.stringify(
         pluginOptions.storageId
       ),
@@ -65,15 +74,21 @@ exports.onCreateWebpackConfig = (
   )
 
   if (stage === 'develop' || stage === 'build-javascript') {
-    const glob = path.dirname(pluginOptions.filesGlob)
+    const isInGlob = (fileName) => {
+      return pluginOptions.filesGlobs.some((glob) =>
+        micromatch.isMatch(fileName, path.dirname(glob))
+      )
+    }
+
     config.optimization.splitChunks.cacheGroups.styles = {
       ...config.optimization.splitChunks.cacheGroups.styles,
       name(module) {
-        const context = slash(module.context)
-        if (micromatch.isMatch(context, glob)) {
-          const moduleName = context.match(/\/.*theme-([^/]*)$/)[1]
+        const fileName = slash(module.context)
+        if (isInGlob(fileName)) {
+          const moduleName =
+            fileName.match(/\/.*theme-([^/]*)$/)?.[1] || 'commons'
 
-          if (!global.themeNames.includes(moduleName)) {
+          if (moduleName && !global.themeNames.includes(moduleName)) {
             global.themeNames.push(moduleName)
           }
 

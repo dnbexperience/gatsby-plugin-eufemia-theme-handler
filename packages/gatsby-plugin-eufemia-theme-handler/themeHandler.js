@@ -1,4 +1,5 @@
 import React from 'react'
+import { Theme } from '@dnb/eufemia/shared'
 import inlineScriptProd from '!raw-loader!terser-loader!./inlineScriptProd'
 import inlineScriptDev from '!raw-loader!terser-loader!./inlineScriptDev'
 import EventEmitter from './EventEmitter.js'
@@ -16,7 +17,7 @@ export function isValidTheme(themeName) {
   return availableThemesArray.includes(themeName)
 }
 
-export function useTheme() {
+export function useThemeHandler() {
   const [theme, setTheme] = React.useState(getTheme)
 
   React.useEffect(() => {
@@ -39,7 +40,8 @@ export function getTheme() {
 
     const regex = /.*eufemia-theme=([^&]*).*/
     const query = window.location.search
-    const fromQuery = (regex.test(query) && query?.replace(regex, '$1')) || null
+    const fromQuery =
+      (regex.test(query) && query?.replace(regex, '$1')) || null
 
     const themeName = fromQuery || theme?.name || defaultTheme
 
@@ -158,7 +160,10 @@ export const onPreRenderHTML = (
       .replace(/globalThis.isDev/g, JSON.stringify(isDev))
       .replace(/globalThis.defaultTheme/g, JSON.stringify(defaultTheme))
       .replace(/globalThis.storageId/g, JSON.stringify(storageId))
-      .replace(/globalThis.availableThemes/g, JSON.stringify(availableThemes))
+      .replace(
+        /globalThis.availableThemes/g,
+        JSON.stringify(availableThemes)
+      )
       .replace(
         /globalThis.inlineDefaultTheme/g,
         JSON.stringify(pluginOptions?.inlineDefaultTheme)
@@ -222,4 +227,18 @@ export const onPreRenderHTML = (
 
     replaceHeadComponents(uniqueHeadComponents)
   }
+}
+
+export function ThemeProvider({ children }) {
+  const theme = useThemeHandler()
+
+  return <Theme {...theme}>{children}</Theme>
+}
+
+export function wrapRootElement({ element }, pluginOptions) {
+  if (pluginOptions?.wrapWithThemeProvider) {
+    return <ThemeProvider>{element}</ThemeProvider>
+  }
+
+  return element
 }

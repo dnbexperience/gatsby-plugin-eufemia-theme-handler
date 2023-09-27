@@ -57,13 +57,16 @@ if (typeof window !== 'undefined') {
               }
 
               const defaultStyleElement = document.querySelector(
-                '[data-href^="' + themes[globalThis.defaultTheme].file + '"]'
+                '[data-href^="' +
+                  themes[globalThis.defaultTheme].file +
+                  '"]'
               )
               if (defaultStyleElement) {
                 headElement.removeChild(defaultStyleElement)
               }
 
-              const previousElem = document.getElementById('previous-theme')
+              const previousElem =
+                document.getElementById('previous-theme')
               if (previousElem) {
                 headElement.removeChild(previousElem)
               }

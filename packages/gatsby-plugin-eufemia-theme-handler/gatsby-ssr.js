@@ -1,3 +1,3 @@
 import './load-eufemia-themes'
 
-export { onPreRenderHTML } from './themeHandler.js'
+export { onPreRenderHTML, wrapRootElement } from './themeHandler.js'
