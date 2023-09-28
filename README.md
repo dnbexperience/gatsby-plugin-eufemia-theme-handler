@@ -59,6 +59,7 @@ function ThemeProvider({ children }) {
 
         // (optional) Definfes with a glob where the styles are placed inside of @dnb/eufemia/...
         filesGlobs: [
+          '**/style/dnb-ui-core.min.css',
           '**/style/themes/**/*-theme-{basis,components,extensions}.min.css',
         ],
 
@@ -77,6 +78,9 @@ function ThemeProvider({ children }) {
 
         // (optional) when set to false, your will have to import the core styles (dnb-ui-core) by yourself.
         coreStyleName: 'dnb-ui-core',
+
+        // (optional) informs you with all relevant files.
+        verbose: false,
       },
     },
   ]
@@ -111,7 +115,7 @@ Gatsby bundles all styles into one single Webpack chunk (commons.css) and inline
 What this plugin does is:
 
 - Collect all `eufemia-theme` files (`{scss,css}`) – also check if they are located in `/src` or needs to be collected from `/build`. Both are used by the Eufemia repo/portal.
-- After we have collected all available theme files, we create or update a static import `load-eufemia-themes.js`, which is git-ignored.
+- After we have collected all available theme files, we create or update a static import `load-eufemia-styles.js`, which is git-ignored.
 - Split theme styles into separate CSS files (Webpack chunks) inside `gatsby-node.js`
 - Inserts some JavaScript in the HTML head in order to handle what theme file should be shown (`inlineScriptProd` and `inlineScriptDev`)
 - Load these inline scripts via Webpack inline module loaders: `!raw-loader!terser-loader!`

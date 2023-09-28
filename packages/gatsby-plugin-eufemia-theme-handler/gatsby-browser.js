@@ -1,2 +1,2 @@
-import './load-eufemia-themes'
+import './load-eufemia-styles'
 export { wrapRootElement } from './themeHandler.js'

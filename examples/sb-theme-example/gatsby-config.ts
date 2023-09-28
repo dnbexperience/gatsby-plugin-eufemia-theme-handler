@@ -4,6 +4,7 @@ export default {
     {
       resolve: 'gatsby-plugin-eufemia-theme-handler',
       options: {
+        verbose: true,
         defaultTheme: 'sbanken',
         storageId: 'eufemia-sbanken',
         themes: {
