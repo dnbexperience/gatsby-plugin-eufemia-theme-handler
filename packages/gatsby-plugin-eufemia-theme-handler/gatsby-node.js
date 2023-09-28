@@ -21,8 +21,9 @@ exports.pluginOptionsSchema = ({ Joi }) => {
         '**/style/dnb-ui-core.min.css',
         '**/style/themes/**/*-theme-{basis,components,extensions}.min.css',
       ]),
-    filesOrder: Joi.array().optional().default([
+    includeFiles: Joi.array().optional().default([
       // The file order does matter!
+      '**/dnb-ui-core.*',
       '**/*-theme-extensions.*',
       '**/*-theme-components.*',
       '**/*-theme-basis.*',

@@ -64,7 +64,8 @@ function ThemeProvider({ children }) {
         ],
 
         // (optional) The file order does matter. Define a glob inside an array.
-        filesOrder: [
+        includeFiles: [
+          '**/dnb-ui-core.*',
           '**/*-theme-extensions.*',
           '**/*-theme-components.*',
           '**/*-theme-basis.*',

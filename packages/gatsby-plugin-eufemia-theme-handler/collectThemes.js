@@ -18,7 +18,7 @@ function createThemesImport({
   programDirectory,
   pluginOptions,
 }) {
-  const filesOrder = pluginOptions.filesOrder
+  const includeFiles = pluginOptions.includeFiles
 
   const limitThemes = Object.keys(pluginOptions.themes || [])
   const packageRoot = path.dirname(
@@ -46,6 +46,12 @@ function createThemesImport({
         return false
       }
 
+      if (includeFiles.length > 0) {
+        return includeFiles.some((glob) =>
+          micromatch.isMatch(file, '**/' + glob)
+        )
+      }
+
       return true
     })
 
@@ -69,8 +75,10 @@ function createThemesImport({
     })
     .sort((a, b) => {
       return (
-        filesOrder.findIndex((glob) => micromatch.isMatch(a.file, glob)) -
-        filesOrder.findIndex((glob) => micromatch.isMatch(b.file, glob))
+        includeFiles.findIndex((glob) =>
+          micromatch.isMatch(a.file, glob)
+        ) -
+        includeFiles.findIndex((glob) => micromatch.isMatch(b.file, glob))
       )
     })
 
