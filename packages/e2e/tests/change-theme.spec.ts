@@ -2,7 +2,9 @@ import { test, expect } from '@playwright/test'
 import { clearStorage } from './utils'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/', {
+    timeout: 5000,
+  })
 
   const mounted = page.locator('html[data-remote-mounted]')
   await mounted.waitFor()

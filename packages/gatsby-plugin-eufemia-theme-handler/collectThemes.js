@@ -28,11 +28,15 @@ function createThemesImport({
     return slash(path.join(packageRoot, glob))
   })
 
-  if (pluginOptions.coreStyleName) {
-    globbyPaths.push(`**/style/${pluginOptions.coreStyleName}.min.css`)
+  if (pluginOptions.verbose) {
+    reporter.info(
+      `gatsby-plugin-eufemia-theme-handler > globbyPaths:\n${globbyPaths.join(
+        '\n'
+      )}`
+    )
   }
 
-  const themesFiles = globby
+  const importFiles = globby
     .sync(globbyPaths)
     .map((file) => {
       return slash(file)
@@ -45,7 +49,15 @@ function createThemesImport({
       return true
     })
 
-  const sortedThemesFiles = themesFiles
+  if (pluginOptions.verbose) {
+    reporter.info(
+      `gatsby-plugin-eufemia-theme-handler > importFiles:\n${importFiles.join(
+        '\n'
+      )}`
+    )
+  }
+
+  const sortedImportFiles = importFiles
     .map((file) => {
       const themeName = (file.match(new RegExp('/theme-([^/]*)/')) ||
         [])?.[1]
@@ -63,21 +75,29 @@ function createThemesImport({
     })
 
   if (pluginOptions.coreStyleName) {
-    const coreFile = themesFiles.find((file) =>
+    const coreFile = importFiles.find((file) =>
       file.includes(pluginOptions.coreStyleName)
     )
     if (coreFile) {
-      sortedThemesFiles.unshift({ file: coreFile })
+      sortedImportFiles.unshift({ file: coreFile })
     }
   }
 
+  if (pluginOptions.verbose) {
+    reporter.info(
+      `sortedImportFiles:\n${sortedImportFiles
+        .map(({ file }) => file)
+        .join('\n')}`
+    )
+  }
+
   const writeThemesImports = () => {
-    const imports = sortedThemesFiles.map(({ file }) => {
+    const imports = sortedImportFiles.map(({ file }) => {
       return `import '${file}'`
     })
 
     fs.writeFileSync(
-      path.resolve(__dirname, 'load-eufemia-themes.js'),
+      path.resolve(__dirname, 'load-eufemia-styles.js'),
       imports.join('\n')
     )
   }
@@ -85,8 +105,8 @@ function createThemesImport({
   writeThemesImports()
 
   const showReports = () => {
-    const themeNames = sortedThemesFiles.reduce((acc, { themeName }) => {
-      if (!acc.includes(themeName)) {
+    const themeNames = sortedImportFiles.reduce((acc, { themeName }) => {
+      if (themeName && !acc.includes(themeName)) {
         acc.push(themeName)
       }
       return acc
