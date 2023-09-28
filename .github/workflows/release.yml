@@ -1,11 +1,8 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: ['e2e']
+  push:
     branches: [main, beta]
-    types:
-      - completed
 
 jobs:
   release:
