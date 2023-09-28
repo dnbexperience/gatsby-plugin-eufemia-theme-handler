@@ -1,17 +1,13 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: ['e2e']
+  push:
     branches: [main, beta]
-    types:
-      - completed
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout repository

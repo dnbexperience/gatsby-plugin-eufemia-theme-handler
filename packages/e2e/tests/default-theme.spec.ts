@@ -2,12 +2,15 @@ import { test, expect } from '@playwright/test'
 import { clearStorage } from './utils'
 
 test.beforeEach(async ({ page }) => {
+  await page.reload()
   await page.goto('/', {
     timeout: 5000,
   })
 
   const mounted = page.locator('html[data-remote-mounted]')
-  await mounted.waitFor()
+  await mounted.waitFor({
+    state: 'attached',
+  })
 })
 
 test.afterEach(async ({ page }) => {
