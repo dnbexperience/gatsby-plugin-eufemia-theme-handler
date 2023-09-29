@@ -8,6 +8,7 @@ node_modules/
 # production
 **/public
 **/dist
+**/test-results
 
 # enviroment
 .env

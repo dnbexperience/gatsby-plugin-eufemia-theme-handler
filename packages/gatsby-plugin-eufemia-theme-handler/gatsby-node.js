@@ -31,6 +31,7 @@ exports.pluginOptionsSchema = ({ Joi }) => {
     inlineDefaultTheme: Joi.boolean().optional().default(true),
     wrapWithThemeProvider: Joi.boolean().optional().default(true),
     coreStyleName: Joi.string().optional().default('dnb-ui-core'),
+    omitScrollBehavior: Joi.boolean().optional().default(false),
     verbose: Joi.boolean().optional().default(false),
   })
 }

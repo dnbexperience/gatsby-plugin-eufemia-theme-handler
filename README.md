@@ -13,6 +13,7 @@ It looks for `@dnb/eufemia` – nearest located from where this plugin is used (
 - Loads only one theme package at a time. When the user switches to another theme, a new CSS theme file will be downloaded.
 - Wraps your app with the Eufemia `<Theme>` provider.
 - Loads the core styles by default.
+- Ensures page navigations do not scroll with animation.
 
 ## How to use
 
@@ -79,6 +80,9 @@ function ThemeProvider({ children }) {
 
         // (optional) when set to false, your will have to import the core styles (dnb-ui-core) by yourself.
         coreStyleName: 'dnb-ui-core',
+
+        // (optional) when set to true, the page scroll behaviour will not be effected.
+        omitScrollBehavior: false,
 
         // (optional) informs you with all relevant files.
         verbose: false,
