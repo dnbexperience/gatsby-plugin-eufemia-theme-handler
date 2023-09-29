@@ -4,7 +4,7 @@ import { clearStorage } from './utils'
 test.beforeEach(async ({ page }) => {
   await page.goto('/', {
     timeout: 5000,
-    waitUntil: 'domcontentloaded',
+    waitUntil: 'commit',
   })
 
   await page.locator('html[data-remote-mounted]').waitFor({
