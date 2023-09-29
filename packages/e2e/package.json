@@ -8,12 +8,12 @@
   "scripts": {
     "test": "yarn test:production && yarn test:develop",
     "test:run": "yarn playwright test",
-    "test:watch": "yarn playwright test:run --ui",
-    "test:develop": "yarn build-plugin && start-server-and-test ui-theme-example:develop http://localhost:4000 test:run",
-    "test:production": "yarn build-plugin && start-server-and-test ui-theme-example:production http://localhost:4000 test:run",
+    "test:watch": "yarn playwright test --ui",
+    "test:develop": "yarn build-plugin && start-server-and-test ui-theme-example:develop http://localhost:8001 test:run",
+    "test:production": "yarn build-plugin && start-server-and-test ui-theme-example:production http://localhost:8001 test:run",
     "build-plugin": "yarn workspace gatsby-plugin-eufemia-theme-handler build",
-    "ui-theme-example:develop": "yarn clean && yarn workspace ui-theme-example gatsby develop --port=4000",
-    "ui-theme-example:production": "yarn clean && yarn workspace ui-theme-example gatsby build && yarn workspace ui-theme-example gatsby serve --port=4000",
+    "ui-theme-example:develop": "yarn clean && yarn workspace ui-theme-example gatsby develop --port=8001",
+    "ui-theme-example:production": "yarn clean && yarn workspace ui-theme-example gatsby build && yarn workspace ui-theme-example gatsby serve --port=8001",
     "clean": "yarn workspace ui-theme-example gatsby clean"
   },
   "devDependencies": {
