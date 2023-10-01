@@ -88,14 +88,13 @@ exports.onCreateWebpackConfig = (
       name(module) {
         const fileName = slash(module.context)
         if (isInGlob(fileName)) {
-          const moduleName =
-            fileName.match(/\/.*theme-([^/]*)$/)?.[1] || 'commons'
+          const moduleName = fileName.match(/\/.*theme-([^/]*)$/)?.[1]
 
           if (moduleName && !global.themeNames.includes(moduleName)) {
             global.themeNames.push(moduleName)
           }
 
-          return moduleName
+          return moduleName || 'commons'
         }
 
         return 'commons'
