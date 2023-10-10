@@ -9,14 +9,41 @@
  * But when this package is used inside projects, we do not have /src – a workarround could be to export /src in the main package.
  */
 
+declare global {
+  interface Window {
+    __EEE__?: EventEmitterEEE
+  }
+}
+
+export type EventEmitterId = string
+export type EventEmitterData = Record<string, unknown>
+export type EventEmitterListener = (data: EventEmitterData) => void
+export type EventEmitterEEE = Record<
+  EventEmitterId,
+  EventEmitterScopeObject
+>
+export type EventEmitterScope =
+  | ({
+      __EEE__?: EventEmitterEEE
+    } & Window)
+  | EventEmitter
+export type EventEmitterScopeInstances = Array<EventEmitter>
+export type EventEmitterScopeObject = {
+  count: number
+  instances: EventEmitterScopeInstances
+  data: EventEmitterData
+}
+
 class EventEmitter {
-  static createInstance(id) {
+  static createInstance(id: EventEmitterId) {
     return new EventEmitter(id)
   }
 
-  static __EEE__
+  static __EEE__?: Record<EventEmitterId, EventEmitterScopeObject>
+  id: EventEmitterId
+  listeners: Array<EventEmitterListener>
 
-  constructor(id) {
+  constructor(id: EventEmitterId) {
     scope.__EEE__ = scope.__EEE__ || {}
     if (!scope.__EEE__[id]) {
       scope.__EEE__[id] = {
@@ -33,7 +60,7 @@ class EventEmitter {
 
     return this
   }
-  update = (data) => {
+  update = (data: EventEmitterData) => {
     this.set(data)
     scope.__EEE__[this.id].instances.forEach((instance) => {
       instance.listeners.forEach((fn) => {
@@ -43,7 +70,7 @@ class EventEmitter {
       })
     })
   }
-  set = (data) => {
+  set = (data: EventEmitterData) => {
     scope.__EEE__[this.id].data = {
       ...scope.__EEE__[this.id].data,
       ...data,
@@ -52,13 +79,13 @@ class EventEmitter {
   get = () => {
     return scope.__EEE__[this.id].data
   }
-  listen(fn) {
+  listen(fn: EventEmitterListener) {
     if (!this.listeners.includes(fn)) {
       this.listeners.push(fn)
     }
     return this
   }
-  unlisten(fn) {
+  unlisten(fn?: EventEmitterListener | undefined) {
     for (let i = 0, l = this.listeners.length; i < l; i++) {
       if (!fn || (fn && fn === this.listeners[i])) {
         this.listeners[i] = null

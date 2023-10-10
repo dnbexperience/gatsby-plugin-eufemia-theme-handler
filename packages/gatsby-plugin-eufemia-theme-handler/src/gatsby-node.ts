@@ -3,10 +3,10 @@
  *
  */
 
-const path = require('path')
-const micromatch = require('micromatch')
-const { slash } = require('gatsby-core-utils')
-const { createThemesImport } = require('./collectThemes')
+import path from 'path'
+import micromatch from 'micromatch'
+import { slash } from 'gatsby-core-utils'
+import { createThemesImport } from './collectThemes'
 
 global.themeNames = []
 
