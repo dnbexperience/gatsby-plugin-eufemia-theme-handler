@@ -22,6 +22,7 @@ It looks for `@dnb/eufemia` – nearest located from where this plugin is used (
 ```diff
 - import '@dnb/eufemia/style/core'
 - import '@dnb/eufemia/style/themes/ui'
+- import '@dnb/eufemia/style/themes/sbanken'
 ```
 
 2. This plugin also wraps your application with the [`<Theme>`](https://eufemia.dnb.no/uilib/usage/customisation/theming/theme/) provider. If you want to wrap your apps by yourself, you can disable this by using this option: `wrapWithThemeProvider: false`. You could make your own wrapper like so:
