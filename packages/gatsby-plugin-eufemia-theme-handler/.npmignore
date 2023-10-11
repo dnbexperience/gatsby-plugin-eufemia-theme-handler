@@ -1,0 +1,18 @@
+# dependencies
+/node_modules
+
+# dev
+/src
+babel.config.js
+tsconfig.json
+
+# enviroment
+.env
+.env.*
+
+# pkm
+yarn-lock.json
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
