@@ -46,8 +46,7 @@
     "build:types": "tsc --project tsconfig.json",
     "clean": "rm !(src|babel.config.js|.gitignore|LICENSE|.env|*.md|*.json)",
     "watch": "yarn build --watch",
-    "test:types": "tsc --noEmit",
-    "postinstall": "yarn build"
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "gatsby-core-utils": "4.12.0",
