@@ -30,8 +30,8 @@
     "./collectThemes.js": "./collectThemes.js",
     "./themeHandler.js": "./themeHandler.js",
     "./themeHandler.d.ts": "./themeHandler.d.ts",
-    "./inlineScriptDev.mjs": "./inlineScriptDev.mjs",
-    "./inlineScriptProd.mjs": "./inlineScriptProd.mjs",
+    "./inlineScriptDev.js": "./inlineScriptDev.js",
+    "./inlineScriptProd.js": "./inlineScriptProd.js",
     "./gatsby-node.js": "./gatsby-node.js",
     "./gatsby-browser.js": "./gatsby-browser.js",
     "./gatsby-ssr.js": "./gatsby-ssr.js",
@@ -41,8 +41,11 @@
     "release": "yarn copy-readme && yarn build && semantic-release",
     "release:dry": "semantic-release --dry-run",
     "copy-readme": "cp ../../README.md ./README.md",
-    "build": "echo not implemented",
-    "watch": "echo not implemented",
+    "build": "yarn build:cmd && GATSBY_FILES=true yarn build:cmd && yarn build:types",
+    "build:cmd": "yarn babel src --extensions .js,.ts,.tsx,.mjs --out-dir .",
+    "build:types": "tsc --project tsconfig.json",
+    "clean": "rm -rf themeHandler.js themeHandler.d.js load-eufemia-styles.js inlineScriptProd.js inlineScriptDev.js index.js gatsby-ssr.js gatsby-node.js gatsby-browser.js EventEmitter.js collectThemes.js",
+    "watch": "yarn build --watch",
     "test:types": "tsc --noEmit"
   },
   "dependencies": {
@@ -53,6 +56,11 @@
     "terser-loader": "2.0.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.23.0",
     "semantic-release": "21.1.1",
     "typescript": "5.2.2"
   },

@@ -1,1 +1,3 @@
-load-eufemia-styles.js
+*.js
+*.d.ts
+!babel.config.js

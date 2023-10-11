@@ -1,8 +1,8 @@
-const path = require('path')
-const fs = require('fs')
-const globby = require('globby')
-const micromatch = require('micromatch')
-const { slash } = require('gatsby-core-utils')
+import path from 'path'
+import fs from 'fs'
+import globby from 'globby'
+import micromatch from 'micromatch'
+import { slash } from 'gatsby-core-utils'
 
 /**
  * We want to run this in sync,
@@ -13,7 +13,7 @@ const { slash } = require('gatsby-core-utils')
  * @property {object} reporter Gatsby Reporter
  * @property {object} pluginOptions Gatsby pluginOptions
  */
-function createThemesImport({
+export function createThemesImport({
   reporter,
   programDirectory,
   pluginOptions,
@@ -63,24 +63,28 @@ function createThemesImport({
     )
   }
 
-  const sortedImportFiles = importFiles
-    .map((file) => {
-      const themeName = (file.match(new RegExp('/theme-([^/]*)/')) ||
-        [])?.[1]
+  type File = string
+  const sortedImportFiles: Array<{ file: File; themeName?: string }> =
+    importFiles
+      .map((file) => {
+        const themeName = (file.match(new RegExp('/theme-([^/]*)/')) ||
+          [])?.[1]
 
-      return { file, themeName }
-    })
-    .filter(({ themeName }) => {
-      return limitThemes.length === 0 || limitThemes.includes(themeName)
-    })
-    .sort((a, b) => {
-      return (
-        includeFiles.findIndex((glob) =>
-          micromatch.isMatch(a.file, glob)
-        ) -
-        includeFiles.findIndex((glob) => micromatch.isMatch(b.file, glob))
-      )
-    })
+        return { file, themeName }
+      })
+      .filter(({ themeName }) => {
+        return limitThemes.length === 0 || limitThemes.includes(themeName)
+      })
+      .sort((a, b) => {
+        return (
+          includeFiles.findIndex((glob) =>
+            micromatch.isMatch(a.file, glob)
+          ) -
+          includeFiles.findIndex((glob) =>
+            micromatch.isMatch(b.file, glob)
+          )
+        )
+      })
 
   if (pluginOptions.coreStyleName) {
     const coreFile = importFiles.find((file) =>
@@ -129,5 +133,3 @@ function createThemesImport({
 
   showReports()
 }
-
-exports.createThemesImport = createThemesImport

@@ -4,46 +4,61 @@ import inlineScriptProd from '!raw-loader!terser-loader!./inlineScriptProd'
 import inlineScriptDev from '!raw-loader!terser-loader!./inlineScriptDev'
 import EventEmitter from './EventEmitter.js'
 
+import type { ThemeNames, ThemeProps } from '@dnb/eufemia/shared/Theme'
+
+type PropMapping = string
+
+export type ThemesItem = {
+  file?: string
+  hide?: boolean
+  isDev?: boolean
+} & ThemeProps & { name?: ThemeNames }
+export type Themes = Array<ThemesItem>
+
 const defaultTheme = globalThis.EUFEMIA_THEME_defaultTheme || 'ui'
 const availableThemes = globalThis.EUFEMIA_THEME_themes || []
 const storageId = globalThis.EUFEMIA_THEME_storageId || 'eufemia-theme'
 const availableThemesArray = Object.keys(availableThemes)
 
-export function getThemes() {
+export function getThemes(): Themes {
   return availableThemes
 }
 
-export function isValidTheme(themeName) {
+export function isValidTheme(themeName: ThemeNames) {
   return availableThemesArray.includes(themeName)
 }
 
-export function useThemeHandler() {
+export function useThemeHandler(): ThemesItem {
   const [theme, setTheme] = React.useState(getTheme)
 
   React.useEffect(() => {
     const emitter = EventEmitter.createInstance('themeHandler')
     emitter.listen((theme) => {
-      setTheme(theme)
+      setTheme(theme as ThemesItem)
     })
   }, [])
 
   return theme
 }
 
-export function getTheme() {
+export function getTheme(): ThemesItem {
   if (typeof window === 'undefined') {
     return { name: defaultTheme }
   }
   try {
     const data = window.localStorage.getItem(storageId)
-    const theme = JSON.parse(data?.startsWith('{') ? data : '{}')
+    const theme = JSON.parse(
+      data?.startsWith('{') ? data : '{}'
+    ) as ThemesItem
 
     const regex = /.*eufemia-theme=([^&]*).*/
     const query = window.location.search
     const fromQuery =
       (regex.test(query) && query?.replace(regex, '$1')) || null
 
-    const themeName = fromQuery || theme?.name || defaultTheme
+    const themeName = (fromQuery ||
+      theme?.name ||
+      defaultTheme) as ThemeNames
 
     if (!isValidTheme(themeName)) {
       console.error('Not valid themeName:', themeName)
@@ -57,8 +72,11 @@ export function getTheme() {
   }
 }
 
-export function setTheme(themeProps, callback) {
-  const theme = { ...getTheme(), ...themeProps }
+export function setTheme(
+  themeProps: { name?: string; propMapping?: PropMapping },
+  callback
+) {
+  const theme = { ...getTheme(), ...themeProps } as ThemesItem
 
   if (!isValidTheme(theme?.name)) {
     console.error('Not valid themeName:', theme?.name)
