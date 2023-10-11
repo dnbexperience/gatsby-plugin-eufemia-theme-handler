@@ -12,11 +12,11 @@ export type ThemesItem = {
   file?: string
   hide?: boolean
   isDev?: boolean
-} & ThemeProps & { name?: ThemeNames }
+} & ThemeProps
 export type Themes = Array<ThemesItem>
 
 const defaultTheme = globalThis.EUFEMIA_THEME_defaultTheme || 'ui'
-const availableThemes = globalThis.EUFEMIA_THEME_themes || []
+const availableThemes = (globalThis.EUFEMIA_THEME_themes || []) as Themes
 const storageId = globalThis.EUFEMIA_THEME_storageId || 'eufemia-theme'
 const availableThemesArray = Object.keys(availableThemes)
 
@@ -74,7 +74,7 @@ export function getTheme(): ThemesItem {
 
 export function setTheme(
   themeProps: { name?: string; propMapping?: PropMapping },
-  callback?
+  callback?: (theme: ThemesItem) => void
 ) {
   const theme = { ...getTheme(), ...themeProps } as ThemesItem
 
