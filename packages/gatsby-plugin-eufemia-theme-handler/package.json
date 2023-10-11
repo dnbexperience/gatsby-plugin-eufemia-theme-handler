@@ -37,7 +37,6 @@
     "./gatsby-ssr.js": "./gatsby-ssr.js",
     "./package.json": "./package.json"
   },
-  "postinstall": "yarn build",
   "scripts": {
     "release": "yarn copy-readme && yarn build && semantic-release",
     "release:dry": "semantic-release --dry-run",
