@@ -74,7 +74,7 @@ export function getTheme(): ThemesItem {
 
 export function setTheme(
   themeProps: { name?: string; propMapping?: PropMapping },
-  callback
+  callback?
 ) {
   const theme = { ...getTheme(), ...themeProps } as ThemesItem
 
