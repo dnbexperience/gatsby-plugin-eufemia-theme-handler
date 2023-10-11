@@ -44,7 +44,7 @@
     "build": "yarn build:cmd && GATSBY_FILES=true yarn build:cmd && yarn build:types",
     "build:cmd": "yarn babel src --extensions .js,.ts,.tsx,.mjs --out-dir .",
     "build:types": "tsc --project tsconfig.json",
-    "clean": "rm !(src|babel.config.js|.gitignore|LICENSE|.env|*.md|*.json)",
+    "clean": "rm !(src|babel.config.js|.gitignore|.npmignore|LICENSE|.env|*.md|*.json)",
     "watch": "yarn build --watch",
     "test:types": "tsc --noEmit"
   },
