@@ -106,6 +106,11 @@ import {
 
 // Example usage
 setTheme({ name })
+// or with callback
+setTheme({ name }, (theme: ThemesItem) =>
+  console.log(`Theme updated to: ${theme.name}`)
+)
+
 const { name } = getTheme()
 const themes = getThemes() // Same as in the plugin config
 
