@@ -44,9 +44,10 @@
     "build": "yarn build:cmd && GATSBY_FILES=true yarn build:cmd && yarn build:types",
     "build:cmd": "yarn babel src --extensions .js,.ts,.tsx,.mjs --out-dir .",
     "build:types": "tsc --project tsconfig.json",
-    "clean": "rm -rf themeHandler.js themeHandler.d.js load-eufemia-styles.js inlineScriptProd.js inlineScriptDev.js index.js gatsby-ssr.js gatsby-node.js gatsby-browser.js EventEmitter.js collectThemes.js",
+    "clean": "rm !(src|babel.config.js|.gitignore|LICENSE|.env|*.md|*.json)",
     "watch": "yarn build --watch",
-    "test:types": "tsc --noEmit"
+    "test:types": "tsc --noEmit",
+    "postinstall": "yarn build"
   },
   "dependencies": {
     "gatsby-core-utils": "4.12.0",
