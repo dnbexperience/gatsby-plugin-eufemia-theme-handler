@@ -59,7 +59,7 @@ function ThemeProvider({ children }) {
         // (optional) defaults to "eufemia-theme" (localStorage)
         storageId: 'your-custom-id',
 
-        // (optional) Definfes with a glob where the styles are placed inside of @dnb/eufemia/...
+        // (optional) defines with a glob where the styles are placed inside of @dnb/eufemia/...
         filesGlobs: [
           '**/style/dnb-ui-core.min.css',
           '**/style/themes/**/*-theme-{basis,components,extensions}.min.css',
