@@ -17,9 +17,9 @@
     "clean": "yarn workspace ui-theme-example gatsby clean"
   },
   "devDependencies": {
-    "@playwright/test": "1.38.1",
+    "@playwright/test": "1.40.1",
     "cross-env": "7.0.3",
-    "start-server-and-test": "2.0.1"
+    "start-server-and-test": "2.0.3"
   },
   "volta": {
     "extends": "../../package.json"
