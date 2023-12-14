@@ -76,10 +76,10 @@ function ThemeProvider({ children }) {
         // (optional) when set to false, all theme styles will be loaded as separate files.
         inlineDefaultTheme: true,
 
-        // (optional) when set to false, your will not be wrapped with the needed `<Theme>` provider.
+        // (optional) when set to false, your app will not be wrapped with the needed `<Theme>` provider.
         wrapWithThemeProvider: true,
 
-        // (optional) when set to false, your will have to import the core styles (dnb-ui-core) by yourself.
+        // (optional) when set to false, your app will have to import the core styles (dnb-ui-core) by yourself.
         coreStyleName: 'dnb-ui-core',
 
         // (optional) when set to true, the page scroll behaviour will not be effected.
