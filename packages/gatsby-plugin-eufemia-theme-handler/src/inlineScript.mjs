@@ -5,16 +5,17 @@ if (typeof window !== 'undefined') {
     callback = null
   ) => {
     try {
+      const headElement = document.head
       const styleElement = document.getElementById('eufemia-style-theme')
-      const headElement = document.querySelector('html head')
       const themes = globalThis.availableThemes
       const theme = themes[themeName]
-      const href = theme.file + (reload ? '?' + Date.now() : '')
 
       if (!theme) {
         console.error('No theme found:', themeName)
         return // stop here
       }
+
+      const href = theme.file + (reload ? '?' + Date.now() : '')
 
       /**
        * To avoid flicker during change
@@ -70,6 +71,8 @@ if (typeof window !== 'undefined') {
               if (previousElem) {
                 headElement.removeChild(previousElem)
               }
+
+              reorderStyles()
             } catch (e) {
               console.error(e)
             }
@@ -107,5 +110,34 @@ if (typeof window !== 'undefined') {
   }
 
   const themeName = globalThis.__getEufemiaThemeName()
-  globalThis.__updateEufemiaThemeFile(themeName)
+  const isDefaultTheme = themeName === globalThis.defaultTheme
+  if (!isDefaultTheme) {
+    globalThis.__updateEufemiaThemeFile(themeName)
+  }
+}
+
+function reorderStyles() {
+  const commonsElement = getCommonsElement()
+  if (commonsElement) {
+    moveElementBelow(
+      document.getElementById('current-theme'),
+      commonsElement
+    )
+    moveElementBelow(
+      document.getElementById('eufemia-style-theme'),
+      commonsElement
+    )
+  }
+}
+
+function getCommonsElement() {
+  const elements = Array.from(document.head.querySelectorAll('link[href]'))
+  return elements.find(({ href }) => {
+    return href.includes('commons')
+  })
+}
+
+function moveElementBelow(elementToMove, targetElement) {
+  const parentElement = targetElement.parentNode
+  parentElement.insertBefore(elementToMove, targetElement.nextSibling)
 }

@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "test": "yarn workspace e2e test",
-    "watch": "yarn workspace gatsby-plugin-eufemia-theme-handler watch",
+    "watch": "yarn workspace gatsby-plugin-eufemia-theme-handler build:watch",
     "watch:all": "yarn watch & yarn workspace sb-theme-example watch & yarn workspace ui-theme-example watch & yarn serve",
     "start": "yarn watch & yarn workspace sb-theme-example start & yarn workspace ui-theme-example start",
     "build": "yarn workspace gatsby-plugin-eufemia-theme-handler build && yarn workspace ui-theme-example build && yarn workspace ui-theme-example serve & yarn workspace sb-theme-example build",

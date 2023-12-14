@@ -128,7 +128,7 @@ What this plugin does is:
 - Collect all `eufemia-theme` files (`{scss,css}`) – also check if they are located in `/src` or needs to be collected from `/build`. Both are used by the Eufemia repo/portal.
 - After we have collected all available theme files, we create or update a static import `load-eufemia-styles.js`, which is git-ignored.
 - Split theme styles into separate CSS files (Webpack chunks) inside `gatsby-node.js`
-- Inserts some JavaScript in the HTML head in order to handle what theme file should be shown (`inlineScriptProd` and `inlineScriptDev`)
+- Inserts some JavaScript in the HTML head in order to handle what theme file should be shown (`inlineScript` and `inlineScriptDev`)
 - Load these inline scripts via Webpack inline module loaders: `!raw-loader!terser-loader!`
 - By using localStorage, we block the HTML rendering, this way we do avoid flickering of a default theme
 
@@ -146,6 +146,10 @@ During dev, we do not get any inline styles from Gatsby – they are handled by 
 - During runtime, we need to ensure that our link with the id `eufemia-style-theme` is placed after `commons.css`. We do that with `headElement.appendChild(styleElement)`
 - Use `uniqueId` to reload css files as there is not unique build hash, unlike we get during production
 - Use `MutationObserver` to reload the current theme file, because Webpack uses hot module replacement, so we need to reload as well
+
+### Sorting order
+
+The order of the extracted styles can influence CSS specificity. Therefore, the extracted theme styles (`/ui.css`) should always be placed below the `/commons.css`.
 
 ## Releases
 
