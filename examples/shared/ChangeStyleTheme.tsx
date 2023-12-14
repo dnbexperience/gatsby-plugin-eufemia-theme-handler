@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dropdown, Switch } from '@dnb/eufemia'
+import { Dropdown } from '@dnb/eufemia'
 import { Context } from '@dnb/eufemia/shared'
 import {
   getThemes,

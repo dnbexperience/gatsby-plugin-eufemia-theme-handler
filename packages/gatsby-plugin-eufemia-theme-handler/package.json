@@ -31,7 +31,7 @@
     "./themeHandler.js": "./themeHandler.js",
     "./themeHandler.d.ts": "./themeHandler.d.ts",
     "./inlineScriptDev.js": "./inlineScriptDev.js",
-    "./inlineScriptProd.js": "./inlineScriptProd.js",
+    "./inlineScript.js": "./inlineScript.js",
     "./gatsby-node.js": "./gatsby-node.js",
     "./gatsby-browser.js": "./gatsby-browser.js",
     "./gatsby-ssr.js": "./gatsby-ssr.js",
@@ -44,8 +44,8 @@
     "build": "yarn build:cmd && GATSBY_FILES=true yarn build:cmd && yarn build:types",
     "build:cmd": "yarn babel src --extensions .js,.ts,.tsx,.mjs --out-dir .",
     "build:types": "tsc --project tsconfig.json",
+    "build:watch": "yarn build:cmd --watch",
     "clean": "rm !(src|babel.config.js|.gitignore|.npmignore|LICENSE|.env|*.md|*.json)",
-    "watch": "yarn build --watch",
     "test:types": "tsc --noEmit"
   },
   "dependencies": {

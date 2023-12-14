@@ -1,8 +1,8 @@
 import React from 'react'
 import { Theme } from '@dnb/eufemia/shared'
-import inlineScriptProd from '!raw-loader!terser-loader!./inlineScriptProd'
+import inlineScript from '!raw-loader!terser-loader!./inlineScript'
 import inlineScriptDev from '!raw-loader!terser-loader!./inlineScriptDev'
-import EventEmitter from './EventEmitter.js'
+import EventEmitter from './EventEmitter'
 
 import type { ThemeNames, ThemeProps } from '@dnb/eufemia/shared/Theme'
 
@@ -109,9 +109,9 @@ export const onPreRenderHTML = (
   // Make themes to not be embedded, but rather load as css files
   if (!isDev) {
     let defaultElement
-    for (const element of headComponents) {
-      const href = element.props['data-href']
-      if (href && href.includes('.css')) {
+    for (const item of headComponents) {
+      const href = item?.props?.['data-href']
+      if (href?.includes('.css')) {
         if (
           availableThemesArray.some((name) => {
             return href.includes(`/${name}.`)
@@ -129,14 +129,14 @@ export const onPreRenderHTML = (
               pluginOptions?.inlineDefaultTheme &&
               themeName === defaultTheme
             ) {
-              defaultElement = element
-              headComponents[element] = null
+              defaultElement = item
+              headComponents[item] = null
             } else {
               // Remove the inline style
               // but not when its the default theme
-              delete element.props['data-href']
-              delete element.props['data-identity']
-              delete element.props.dangerouslySetInnerHTML
+              delete item.props['data-href']
+              delete item.props['data-identity']
+              delete item.props.dangerouslySetInnerHTML
             }
           }
         }
@@ -206,7 +206,7 @@ export const onPreRenderHTML = (
     <script
       key="eufemia-style-theme-script-prod"
       dangerouslySetInnerHTML={{
-        __html: replaceGlobalVars(inlineScriptProd),
+        __html: replaceGlobalVars(inlineScript),
       }}
     />
   )
@@ -236,14 +236,20 @@ export const onPreRenderHTML = (
     headComponents.forEach((item) => {
       const exists = uniqueHeadComponents.some((i) => {
         const href = i?.props?.['data-href']
-        return href && item?.props?.['data-href'] === href
+        return href && href === item?.props?.['data-href']
       })
       if (!exists) {
         uniqueHeadComponents.push(item)
       }
     })
 
-    replaceHeadComponents(uniqueHeadComponents)
+    const orderedComponents = changeOrderOfComponents(
+      uniqueHeadComponents,
+      'props.data-href',
+      ['commons', ...availableThemesArray]
+    )
+
+    replaceHeadComponents(orderedComponents)
   }
 }
 
@@ -259,4 +265,71 @@ export function wrapRootElement({ element }, pluginOptions) {
   }
 
   return element
+}
+
+function changeOrderOfComponents(
+  arr: Array<Record<string, unknown>>,
+  propertyPath: string,
+  order: Array<string>
+) {
+  const copyArr = [...arr]
+
+  const findIndexByMatch = (obj, path, value) => {
+    const keys = path.split('.')
+    let currentObj = obj
+    for (const key of keys) {
+      if (currentObj[key] === undefined) {
+        return -1 // Property doesn't exist in the object
+      }
+      currentObj = currentObj[key]
+    }
+
+    if (Array.isArray(currentObj)) {
+      return currentObj.findIndex((item) => item.includes(value))
+    } else if (typeof currentObj === 'string') {
+      return currentObj.includes(value) ? 0 : -1
+    }
+
+    return -1
+  }
+
+  const validOrder = order.filter((value) =>
+    copyArr.some(
+      (obj) => findIndexByMatch(obj, propertyPath, value) !== -1
+    )
+  )
+
+  // Check if the order is already correct
+  if (
+    validOrder.every(
+      (value, index) =>
+        copyArr[index] &&
+        findIndexByMatch(copyArr[index], propertyPath, value) !== -1
+    )
+  ) {
+    return copyArr
+  }
+
+  const validIndexes = validOrder.map((value) =>
+    copyArr.findIndex(
+      (obj) => findIndexByMatch(obj, propertyPath, value) !== -1
+    )
+  )
+
+  // Check if the order needs to be switched
+  if (
+    validIndexes.length === validOrder.length &&
+    !validIndexes.every((value, index) => value === index)
+  ) {
+    validIndexes.forEach((value, index) => {
+      if (value !== index) {
+        ;[copyArr[index], copyArr[value]] = [
+          copyArr[value],
+          copyArr[index],
+        ]
+      }
+    })
+  }
+
+  return copyArr
 }

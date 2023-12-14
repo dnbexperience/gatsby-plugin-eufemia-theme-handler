@@ -74,20 +74,22 @@ test.describe('change theme', () => {
     expect(uiStyleElementExists).toBeNull()
   })
 
-  test('should load css file after template', async ({ page }) => {
+  test('should place css file after commons.css', async ({ page }) => {
     await page.click('#change-theme')
     await page.click('#change-theme-portal ul li:nth-child(2)')
 
+    const sbanken = 'link[href^="/sbanken."][rel="stylesheet"]'
     const sbankenCssAfterTemplateExists = await page.$(
-      '#eufemia-style-theme + link[href^="/sbanken."][rel="stylesheet"]'
+      `style[data-href^="/commons."] ~ ${sbanken}, link[href^="/commons."] ~ ${sbanken}`
     )
     expect(sbankenCssAfterTemplateExists).toBeTruthy()
 
     await page.click('#change-theme')
     await page.click('#change-theme-portal ul li:first-child')
 
+    const ui = 'link[href^="/ui."][rel="stylesheet"]'
     const uiCssAfterTemplateExists = await page.$(
-      '#eufemia-style-theme + link[href^="/ui."][rel="stylesheet"]'
+      `style[data-href^="/commons."] ~ ${ui}, link[href^="/commons."] ~ ${ui}`
     )
     expect(uiCssAfterTemplateExists).toBeTruthy()
   })
