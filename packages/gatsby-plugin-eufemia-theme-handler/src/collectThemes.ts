@@ -72,8 +72,8 @@ export function createThemesImport({
 
         return { file, themeName }
       })
-      .filter(({ themeName }) => {
-        return limitThemes.length === 0 || limitThemes.includes(themeName)
+      .filter(({ file }) => {
+        return !/\/(cjs|es|esm)\//.test(file)
       })
       .sort((a, b) => {
         return (
@@ -85,15 +85,6 @@ export function createThemesImport({
           )
         )
       })
-
-  if (pluginOptions.coreStyleName) {
-    const coreFile = importFiles.find((file) =>
-      file.includes(pluginOptions.coreStyleName)
-    )
-    if (coreFile) {
-      sortedImportFiles.unshift({ file: coreFile })
-    }
-  }
 
   if (pluginOptions.verbose) {
     reporter.info(

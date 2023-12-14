@@ -19,18 +19,16 @@ exports.pluginOptionsSchema = ({ Joi }) => {
       .optional()
       .default([
         '**/style/dnb-ui-core.min.css',
-        '**/style/themes/**/*-theme-{basis,components,extensions}.min.css',
+        '**/style/themes/**/*-theme-{basis,components}.min.css',
       ]),
     includeFiles: Joi.array().optional().default([
       // The file order does matter!
       '**/dnb-ui-core.*',
-      '**/*-theme-extensions.*',
       '**/*-theme-components.*',
       '**/*-theme-basis.*',
     ]),
     inlineDefaultTheme: Joi.boolean().optional().default(true),
     wrapWithThemeProvider: Joi.boolean().optional().default(true),
-    coreStyleName: Joi.string().optional().default('dnb-ui-core'),
     omitScrollBehavior: Joi.boolean().optional().default(false),
     verbose: Joi.boolean().optional().default(false),
   })
