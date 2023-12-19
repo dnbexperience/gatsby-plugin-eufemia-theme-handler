@@ -6,7 +6,7 @@
  * Because when it is used in the mono-repo https://github.com/dnbexperience/eufemia
  * we some times do build without a prod bundle, so the EventEmitter is then inside /src:
  * import EventEmitter from '@dnb/eufemia/src/shared/helpers/EventEmitter'
- * But when this package is used inside projects, we do not have /src – a workarround could be to export /src in the main package.
+ * But when this package is used inside projects, we do not have /src – a workaround could be to export /src in the main package.
  */
 
 declare global {
