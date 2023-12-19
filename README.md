@@ -72,6 +72,9 @@ function ThemeProvider({ children }) {
           '**/*-theme-basis.*',
         ],
 
+        // (optional) An array of RegExp that defines what should be threaded and splitted into themes.
+        themeMatchers: [/\/themes\/[^/]*theme-([^/.]*)[/.]/],
+
         // (optional) when set to false, all theme styles will be loaded as separate files.
         inlineDefaultTheme: true,
 
@@ -86,6 +89,48 @@ function ThemeProvider({ children }) {
       },
     },
   ]
+}
+```
+
+You can also import local themes. They need to start with `./` when defined in `filesGlobs` and the files need to include `theme-{theme-name}` in the name:
+
+```js
+// Your Config
+import {
+  filesGlobsFallback,
+  includeFilesFallback,
+} from 'gatsby-plugin-eufemia-theme-handler/config.js'
+
+export default {
+  plugins: [
+    'gatsby-plugin-sass',
+    {
+      resolve: 'gatsby-plugin-eufemia-theme-handler',
+      options: {
+        verbose: true,
+        defaultTheme: 'ui',
+        storageId: 'eufemia-ui',
+        filesGlobs: [
+          // Eufemia Styles
+          ...filesGlobsFallback,
+
+          // Local themes
+          './**/styles/themes/**/*.css',
+        ],
+        includeFiles: [
+          // Eufemia Styles
+          ...includeFilesFallback,
+
+          // Local themes
+          '**/styles/themes/**/*.css',
+        ],
+        themes: {
+          ui: { name: 'DNB Eufemia' },
+          sbanken: { name: 'Sbanken' },
+        },
+      },
+    },
+  ],
 }
 ```
 

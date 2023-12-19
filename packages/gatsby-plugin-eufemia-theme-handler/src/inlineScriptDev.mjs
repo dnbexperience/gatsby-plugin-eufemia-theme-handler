@@ -1,7 +1,7 @@
 if (typeof window !== 'undefined') {
   if (!window.__hasEufemiaObserver) {
     window.__hasEufemiaObserver = true
-    onElementInsertion('[href="/commons.css"]', () => {
+    onElementInsertion('[href*="/commons.css"]', () => {
       const themeName = globalThis.__getEufemiaThemeName()
       globalThis.__updateEufemiaThemeFile(themeName, true)
     })

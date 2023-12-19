@@ -7,26 +7,23 @@ import path from 'path'
 import micromatch from 'micromatch'
 import { slash } from 'gatsby-core-utils'
 import { createThemesImport } from './collectThemes'
+import {
+  filesGlobsFallback,
+  includeFilesFallback,
+  themeMatchersFallback,
+} from './config'
 
 global.themeNames = []
+global.reportMatches = []
 
 exports.pluginOptionsSchema = ({ Joi }) => {
   return Joi.object({
     themes: Joi.object().required(),
     defaultTheme: Joi.string().required(),
     storageId: Joi.string().optional().default('eufemia-theme'),
-    filesGlobs: Joi.array()
-      .optional()
-      .default([
-        '**/style/dnb-ui-core.min.css',
-        '**/style/themes/**/*-theme-{basis,components}.min.css',
-      ]),
-    includeFiles: Joi.array().optional().default([
-      // The file order does matter!
-      '**/dnb-ui-core.*',
-      '**/*-theme-components.*',
-      '**/*-theme-basis.*',
-    ]),
+    filesGlobs: Joi.array().optional().default(filesGlobsFallback),
+    includeFiles: Joi.array().optional().default(includeFilesFallback),
+    themeMatchers: Joi.array().optional().default(themeMatchersFallback),
     inlineDefaultTheme: Joi.boolean().optional().default(true),
     wrapWithThemeProvider: Joi.boolean().optional().default(true),
     omitScrollBehavior: Joi.boolean().optional().default(false),
@@ -55,7 +52,7 @@ exports.onPostBuild = ({ reporter }) => {
 }
 
 exports.onCreateWebpackConfig = (
-  { stage, actions, plugins, getConfig },
+  { stage, reporter, actions, plugins, getConfig },
   pluginOptions
 ) => {
   const config = getConfig()
@@ -75,24 +72,49 @@ exports.onCreateWebpackConfig = (
   )
 
   if (stage === 'develop' || stage === 'build-javascript') {
-    const isInGlob = (fileName) => {
-      return pluginOptions.filesGlobs.some((glob) =>
-        micromatch.isMatch(fileName, path.dirname(glob))
+    const includeFilesMatcher = (file) => {
+      return pluginOptions.includeFiles.some((glob) =>
+        micromatch.isMatch(file, path.dirname(glob))
       )
     }
+
+    const themeMatcher = (file) => {
+      let match = null
+      pluginOptions.themeMatchers.some(
+        (regexp) => (match = file.match(regexp)?.[1])
+      )
+      if (match) {
+        return match
+      }
+      return match
+    }
+
+    const themes = Object.keys(pluginOptions.themes)
 
     config.optimization.splitChunks.cacheGroups.styles = {
       ...config.optimization.splitChunks.cacheGroups.styles,
       name(module) {
-        const fileName = slash(module.context)
-        if (isInGlob(fileName)) {
-          const moduleName = fileName.match(/\/.*theme-([^/]*)$/)?.[1]
+        const file = slash(module._identifier.replace(/.*\]!(.*)/, '$1'))
 
-          if (moduleName && !global.themeNames.includes(moduleName)) {
-            global.themeNames.push(moduleName)
+        if (includeFilesMatcher(file)) {
+          const themeName = themeMatcher(file)
+          const match = themes.includes(themeName)
+
+          if (pluginOptions.verbose) {
+            reporter.info(
+              `gatsby-plugin-eufemia-theme-handler > themeMatchers: ${JSON.stringify(
+                { themeName, match, file }
+              )}`
+            )
           }
 
-          return moduleName || 'commons'
+          if (match) {
+            if (themeName && !global.themeNames.includes(themeName)) {
+              global.themeNames.push(themeName)
+            }
+
+            return themeName
+          }
         }
 
         return 'commons'
