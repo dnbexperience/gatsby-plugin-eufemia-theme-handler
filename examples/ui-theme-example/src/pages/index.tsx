@@ -3,7 +3,6 @@ import { Anchor, Button, Card } from '@dnb/eufemia'
 import { Form } from '@dnb/eufemia/extensions/forms'
 import ChangeStyleTheme from '../../../shared/ChangeStyleTheme'
 import { Link } from 'gatsby'
-import './style.css'
 
 const App = () => {
   return (

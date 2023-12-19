@@ -29,6 +29,7 @@
     },
     "./collectThemes.js": "./collectThemes.js",
     "./themeHandler.js": "./themeHandler.js",
+    "./config.js": "./config.js",
     "./themeHandler.d.ts": "./themeHandler.d.ts",
     "./inlineScriptDev.js": "./inlineScriptDev.js",
     "./inlineScript.js": "./inlineScript.js",
@@ -44,8 +45,8 @@
     "build": "yarn build:cmd && GATSBY_FILES=true yarn build:cmd && yarn build:types",
     "build:cmd": "yarn babel src --extensions .js,.ts,.tsx,.mjs --out-dir .",
     "build:types": "tsc --project tsconfig.json",
-    "build:watch": "yarn build:cmd --watch",
-    "clean": "rm !(src|babel.config.js|.gitignore|.npmignore|LICENSE|.env|*.md|*.json)",
+    "build:watch": "concurrently 'yarn clean' 'yarn build:cmd --watch' 'GATSBY_FILES=true yarn build:cmd --watch' 'yarn build:types --watch'",
+    "clean": "rm !(src|babel.config.js|.gitignore|.npmignore|LICENSE|.env|*.md|*.json) & echo 1",
     "test:types": "tsc --noEmit"
   },
   "dependencies": {
@@ -61,6 +62,7 @@
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
+    "concurrently": "8.2.2",
     "semantic-release": "21.1.1",
     "typescript": "5.3.3"
   },

@@ -12,7 +12,7 @@
     "start": "yarn watch & yarn workspace sb-theme-example start & yarn workspace ui-theme-example start",
     "build": "yarn workspace gatsby-plugin-eufemia-theme-handler build && yarn workspace ui-theme-example build && yarn workspace ui-theme-example serve & yarn workspace sb-theme-example build",
     "serve": "yarn workspace sb-theme-example serve & yarn workspace ui-theme-example serve",
-    "clean": "yarn workspace sb-theme-example clean & yarn workspace ui-theme-example clean",
+    "clean": "yarn workspace gatsby-plugin-eufemia-theme-handler clean && yarn workspace sb-theme-example clean & yarn workspace ui-theme-example clean",
     "release": "yarn workspace gatsby-plugin-eufemia-theme-handler release"
   },
   "devDependencies": {

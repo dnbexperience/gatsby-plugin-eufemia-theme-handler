@@ -20,11 +20,13 @@ export function createThemesImport({
 }) {
   const includeFiles = pluginOptions.includeFiles
 
-  const limitThemes = Object.keys(pluginOptions.themes || [])
   const packageRoot = path.dirname(
     require.resolve('@dnb/eufemia', { paths: [programDirectory] })
   )
   const globbyPaths = pluginOptions.filesGlobs.map((glob) => {
+    if (glob.startsWith('./')) {
+      return slash(path.join(programDirectory, glob))
+    }
     return slash(path.join(packageRoot, glob))
   })
 
@@ -36,24 +38,19 @@ export function createThemesImport({
     )
   }
 
-  const importFiles = globby
-    .sync(globbyPaths)
-    .map((file) => {
-      return slash(file)
-    })
-    .filter((file) => {
-      if (/\/(es|cjs)\/style\//.test(file)) {
-        return false
-      }
+  const importFiles = globby.sync(globbyPaths).filter((file) => {
+    if (/\/(es|cjs)\/style\//.test(file)) {
+      return false
+    }
 
-      if (includeFiles.length > 0) {
-        return includeFiles.some((glob) =>
-          micromatch.isMatch(file, '**/' + glob)
-        )
-      }
+    if (includeFiles.length > 0) {
+      return includeFiles.some((glob) =>
+        micromatch.isMatch(file, '**/' + glob)
+      )
+    }
 
-      return true
-    })
+    return true
+  })
 
   if (pluginOptions.verbose) {
     reporter.info(
@@ -94,6 +91,55 @@ export function createThemesImport({
     )
   }
 
+  /**
+   * Report about what Eufemia versions are found and used
+   */
+  if (pluginOptions.verbose) {
+    const roots = {}
+    const versions = {}
+
+    sortedImportFiles.forEach(({ file }) => {
+      const rootPath = findNearestPackageJson(file)
+      roots[rootPath] = [...(roots[rootPath] || []), file]
+    })
+
+    Object.entries(roots).forEach(([file, info]) => {
+      const content = fs.readFileSync(file, 'utf-8')
+      const json = JSON.parse(content)
+      const { name, version, dependencies, devDependencies } = json
+
+      const collection = [
+        name !== '@dnb/eufemia' ? 'local' : version,
+        dependencies?.['@dnb/eufemia'],
+        devDependencies?.['@dnb/eufemia'],
+      ].filter(Boolean)
+
+      collection.forEach((version) => {
+        versions[version] = [...(versions[version] || []), info]
+      })
+    })
+
+    const listOfVersions = Object.keys(versions).filter(
+      (version) => version !== 'local'
+    )
+
+    if (listOfVersions.length > 1) {
+      reporter.warn(
+        `gatsby-plugin-eufemia-theme-handler > @dnb/eufemia versions:\n${JSON.stringify(
+          versions,
+          null,
+          2
+        )}`
+      )
+    } else {
+      reporter.info(
+        `gatsby-plugin-eufemia-theme-handler > @dnb/eufemia version: ${listOfVersions.join(
+          ', '
+        )}`
+      )
+    }
+  }
+
   const writeThemesImports = () => {
     const imports = sortedImportFiles.map(({ file }) => {
       return `import '${file}'`
@@ -123,4 +169,21 @@ export function createThemesImport({
   }
 
   showReports()
+}
+
+function findNearestPackageJson(filePath) {
+  let currentDir = path.dirname(filePath)
+
+  while (currentDir !== '/') {
+    const packageJsonPath = path.join(currentDir, 'package.json')
+
+    if (fs.existsSync(packageJsonPath)) {
+      return packageJsonPath
+    }
+
+    // Move up one level in the directory tree
+    currentDir = path.dirname(currentDir)
+  }
+
+  return null // No package.json found
 }
