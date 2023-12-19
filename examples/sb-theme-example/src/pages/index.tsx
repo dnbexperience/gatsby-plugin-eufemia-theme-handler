@@ -1,17 +1,17 @@
 import React from 'react'
-import { Button } from '@dnb/eufemia'
-import { Layout } from '@dnb/eufemia/extensions/forms'
+import { Anchor, Button, Card } from '@dnb/eufemia'
+import { Form } from '@dnb/eufemia/extensions/forms'
 import ChangeStyleTheme from '../../../shared/ChangeStyleTheme'
 
 const App = () => {
   return (
-    <Layout.Card space spacing="medium">
-      <Layout.MainHeading>Sbanken</Layout.MainHeading>
+    <Card space spacing="medium">
+      <Form.MainHeading>Sbanken</Form.MainHeading>
 
       <Button icon="bell">Button</Button>
 
       <ChangeStyleTheme />
-    </Layout.Card>
+    </Card>
   )
 }
 

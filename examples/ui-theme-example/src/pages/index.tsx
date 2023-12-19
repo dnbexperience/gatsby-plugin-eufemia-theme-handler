@@ -1,14 +1,14 @@
 import React from 'react'
-import { Anchor, Button } from '@dnb/eufemia'
-import { Layout } from '@dnb/eufemia/extensions/forms'
+import { Anchor, Button, Card } from '@dnb/eufemia'
+import { Form } from '@dnb/eufemia/extensions/forms'
 import ChangeStyleTheme from '../../../shared/ChangeStyleTheme'
 import { Link } from 'gatsby'
 import './style.css'
 
 const App = () => {
   return (
-    <Layout.Card space spacing="medium">
-      <Layout.MainHeading>DNB UI</Layout.MainHeading>
+    <Card space spacing="medium">
+      <Form.MainHeading>DNB UI</Form.MainHeading>
 
       <Button icon="bell">Button</Button>
 
@@ -17,7 +17,7 @@ const App = () => {
       <Anchor element={Link as any} to="/page-b#bottom">
         Page B
       </Anchor>
-    </Layout.Card>
+    </Card>
   )
 }
 
