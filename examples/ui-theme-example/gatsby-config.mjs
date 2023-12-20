@@ -1,8 +1,3 @@
-import {
-  filesGlobsFallback,
-  includeFilesFallback,
-} from 'gatsby-plugin-eufemia-theme-handler/config.js'
-
 export default {
   plugins: [
     'gatsby-plugin-sass',
@@ -12,20 +7,7 @@ export default {
         verbose: true,
         defaultTheme: 'ui',
         storageId: 'eufemia-ui',
-        filesGlobs: [
-          // Eufemia Styles
-          ...filesGlobsFallback,
-
-          // Local styles
-          './**/styles/themes/**/*',
-        ],
-        includeFiles: [
-          // Eufemia Styles
-          ...includeFilesFallback,
-
-          // Local styles
-          '**/styles/themes/**/*',
-        ],
+        includeLocalStyles: true,
         themes: {
           ui: { name: 'DNB Eufemia' },
           sbanken: { name: 'Sbanken' },

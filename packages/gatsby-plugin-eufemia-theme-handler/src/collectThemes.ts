@@ -18,12 +18,17 @@ export function createThemesImport({
   programDirectory,
   pluginOptions,
 }) {
-  const includeFiles = pluginOptions.includeFiles
+  const { filesGlobs, includeFiles } = pluginOptions
+
+  if (pluginOptions.includeLocalStyles) {
+    filesGlobs.push('./**/styles/themes/**/*')
+    includeFiles.push('**/styles/themes/**/*')
+  }
 
   const packageRoot = path.dirname(
     require.resolve('@dnb/eufemia', { paths: [programDirectory] })
   )
-  const globbyPaths = pluginOptions.filesGlobs.map((glob) => {
+  const globbyPaths = filesGlobs.map((glob) => {
     if (glob.startsWith('./')) {
       return slash(path.join(programDirectory, glob))
     }

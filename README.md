@@ -27,7 +27,7 @@ It looks for `@dnb/eufemia` – nearest located from where this plugin is used (
 
 2. This plugin also wraps your application with the [`<Theme>`](https://eufemia.dnb.no/uilib/usage/customisation/theming/theme/) provider. If you want to wrap your apps by yourself, you can disable this by using this option: `wrapWithThemeProvider: false`. You could make your own wrapper like so:
 
-```jsx
+```tsx
 import { Theme } from '@dnb/eufemia/shared'
 import { useThemeHandler } from 'gatsby-plugin-eufemia-theme-handler'
 
@@ -58,6 +58,9 @@ function ThemeProvider({ children }) {
 
         // (optional) defaults to "eufemia-theme" (localStorage)
         storageId: 'your-custom-id',
+
+        // (optional) whether to include your own local styles. More information down below.
+        includeLocalStyles: true,
 
         // (optional) defines with a glob where the styles are placed inside of @dnb/eufemia/...
         filesGlobs: [
@@ -92,6 +95,7 @@ function ThemeProvider({ children }) {
 }
 ```
 
+<<<<<<< HEAD
 You can also import local themes. They need to start with `./` when defined in `filesGlobs` and the files need to include `theme-{theme-name}` in the name:
 
 ```js
@@ -135,8 +139,96 @@ export default {
 ```
 
 You can also use the interceptor methods from inside your components:
+=======
+### Your own theme styles
+
+You can also import your own local themes by enabling `includeLocalStyles`.
+>>>>>>> c0bcd82 (feat: import local themes (#27))
 
 ```js
+// gatsby-config.js
+{
+  plugins: [
+    'gatsby-plugin-sass',
+    {
+      resolve: 'gatsby-plugin-eufemia-theme-handler',
+      options: {
+        defaultTheme: 'ui',
+        includeLocalStyles: true,
+        themes: {
+          ui: { name: 'DNB Eufemia' },
+          sbanken: { name: 'Sbanken' },
+        },
+      },
+    },
+  ],
+}
+```
+
+Your file structure would then need to be as so (this can be customized):
+
+```js
+/src/.../styles/themes/theme-ui.scss
+/src/.../styles/themes/theme-sbanken.scss
+```
+
+or
+
+```js
+/src/.../styles/themes/.../theme-ui.scss
+/src/.../styles/themes/.../theme-sbanken.scss
+```
+
+#### Further local theme styles customization
+
+They need to start with `./` when defined in `filesGlobs`:
+
+```ts
+import {
+  filesGlobsFallback,
+  includeFilesFallback,
+} from 'gatsby-plugin-eufemia-theme-handler/config.js'
+
+export default {
+  plugins: [
+    'gatsby-plugin-sass',
+    {
+      resolve: 'gatsby-plugin-eufemia-theme-handler',
+      options: {
+        verbose: true,
+        defaultTheme: 'ui',
+        storageId: 'eufemia-ui',
+        filesGlobs: [
+          // Eufemia Styles
+          ...filesGlobsFallback,
+
+          // Local themes
+          './**/styles/themes/**/*.css',
+        ],
+        includeFiles: [
+          // Eufemia Styles
+          ...includeFilesFallback,
+
+          // Local themes
+          '**/styles/themes/**/*.css',
+        ],
+        themes: {
+          ui: { name: 'DNB Eufemia' },
+          sbanken: { name: 'Sbanken' },
+        },
+      },
+    },
+  ],
+}
+```
+
+The file and folder structure is defined in `themeMatchers` and can also be customized if needed.
+
+### Switch a theme in runtime
+
+You can also use the interceptor methods from inside your components:
+
+```tsx
 // Your React Component
 import {
   getThemes,
