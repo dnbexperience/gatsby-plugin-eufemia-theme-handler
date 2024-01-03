@@ -95,55 +95,9 @@ function ThemeProvider({ children }) {
 }
 ```
 
-<<<<<<< HEAD
-You can also import local themes. They need to start with `./` when defined in `filesGlobs` and the files need to include `theme-{theme-name}` in the name:
-
-```js
-// Your Config
-import {
-  filesGlobsFallback,
-  includeFilesFallback,
-} from 'gatsby-plugin-eufemia-theme-handler/config.js'
-
-export default {
-  plugins: [
-    'gatsby-plugin-sass',
-    {
-      resolve: 'gatsby-plugin-eufemia-theme-handler',
-      options: {
-        verbose: true,
-        defaultTheme: 'ui',
-        storageId: 'eufemia-ui',
-        filesGlobs: [
-          // Eufemia Styles
-          ...filesGlobsFallback,
-
-          // Local themes
-          './**/styles/themes/**/*.css',
-        ],
-        includeFiles: [
-          // Eufemia Styles
-          ...includeFilesFallback,
-
-          // Local themes
-          '**/styles/themes/**/*.css',
-        ],
-        themes: {
-          ui: { name: 'DNB Eufemia' },
-          sbanken: { name: 'Sbanken' },
-        },
-      },
-    },
-  ],
-}
-```
-
-You can also use the interceptor methods from inside your components:
-=======
 ### Your own theme styles
 
 You can also import your own local themes by enabling `includeLocalStyles`.
->>>>>>> c0bcd82 (feat: import local themes (#27))
 
 ```js
 // gatsby-config.js
